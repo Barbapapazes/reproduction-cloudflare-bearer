@@ -1,10 +1,7 @@
-export default defineEventHandler(async () => {
-  await $fetch('https://jewel-cultural-owen-new.trycloudflare.com', {
-    headers: {
-      'Authorization': 'Bearer my-token',
-      'Content-Type': 'application/json',
-    },
-  })
+export default defineEventHandler(async (event) => {
+  const client = useCircleClient(event)
+
+  await client('/')
 
   return {
     body: 'Hello from the server!',
