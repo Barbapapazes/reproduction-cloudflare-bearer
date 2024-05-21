@@ -1,75 +1,37 @@
-# Nuxt 3 Minimal Starter
+This is a small reproduction for a possible bug in Cloudflare or ofetch.
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Setup
-
-Make sure to install the dependencies:
+You need to build the nuxt app and deploy it on cloudflare
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+NITRO_PRESET=cloudflare_pages npm run build
 ```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+npx wrangler pages deploy dist/
 ```
 
-## Production
-
-Build the application for production:
+Then you can start the `server.mjs` file.
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+node server.mjs # Start on port 4000
 ```
 
-Locally preview production build:
+The Nuxt application will make a request to the endpoint using the bearer token and the response will be logged to the console.
+
+Use cloudflare tunnel to expose the small node server to the internet. (used to verify the issue from cloudflare)
 
 ```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+cloudflared tunnel --url http://localhost:4000
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Get the tunnel name and set the `NUXT_ENDPOINT` environment variable to the tunnel name.
+
+```bash
+NUXT_ENDPOINT=<tunnel-name>.trycloudflare.com
+```
+
+Setup the bearer token:
+
+```bash
+NUXT_CIRCLE_API_KEY=<bearer-token>
+```
